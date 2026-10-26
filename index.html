@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- למחוק את השורה הבאה כשהאתר מוכן לפרסום (היא מונעת מגוגל לאנדקס טיוטה) -->
+  <meta name="robots" content="noindex">
+  <title>גל זיתוני | מאמן כלבים בתל אביב</title>
+  <meta name="description" content="גל זיתוני – מאמן בעלי כלבים עירוניים בתל אביב. אילוף גורים, הליכה ברצועה, משמעת ובעיות התנהגות – חיים טובים יותר עם הכלב שלכם. לשיחת היכרות בוואטסאפ.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="גל זיתוני | מאמן כלבים בתל אביב">
+  <meta property="og:description" content="חיים טובים יותר עם הכלב שלכם. לשיחת היכרות בוואטסאפ.">
+  <meta property="og:image" content="images/logo-mark.jpg">
+  <meta property="og:locale" content="he_IL">
+  <meta name="theme-color" content="#1f4d3a">
+  <link rel="icon" href="images/logo-mark.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">דילוג לתוכן הראשי</a>
+
+  <header class="site-header" id="top">
+    <div class="container header__inner">
+      <a class="brand" href="#top" aria-label="גל זיתוני – אילוף כלבים, חזרה לראש הדף">
+        <span class="brand__icon" data-icon="paw" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__name" data-bind="business.name"></span>
+          <span class="brand__title" data-bind="business.title"></span>
+        </span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+        <span class="visually-hidden">תפריט ניווט</span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="ניווט ראשי">
+        <ul class="site-nav__list"></ul>
+      </nav>
+
+      <a class="btn btn--wa btn--sm header__cta" data-wa href="#contact">
+        <span data-icon="whatsapp" aria-hidden="true"></span>
+        <span>וואטסאפ</span>
+        <span class="visually-hidden">(נפתח בחלון חדש)</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__slides" aria-hidden="true"></div>
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="container hero__content">
+      <p class="hero__eyebrow" data-bind="hero.eyebrow"></p>
+      <h1 class="hero__title" id="hero-title">
+        <span data-bind="hero.title"></span>
+        <span class="hero__accent" data-bind="hero.titleAccent"></span>
+      </h1>
+      <p class="hero__subtitle" data-bind="hero.subtitle"></p>
+      <div class="hero__actions">
+        <a class="btn btn--wa btn--lg" data-wa href="#contact">
+          <span data-icon="whatsapp" aria-hidden="true"></span>
+          <span data-bind="hero.primaryCta"></span>
+          <span class="visually-hidden">(נפתח בחלון חדש)</span>
+        </a>
+        <a class="btn btn--ghost btn--lg" href="#process" data-bind="hero.secondaryCta"></a>
+      </div>
+    </div>
+    <button class="hero__pause" type="button" aria-pressed="false">
+      <span class="hero__pause-icon" data-icon="pause" aria-hidden="true"></span>
+      <span class="hero__pause-label">עצירת החלפת התמונות</span>
+    </button>
+  </section>
+
+  <main id="main" tabindex="-1">
+    <!-- החלקים נבנים אוטומטית מתוך js/content.js -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div>
+        <p class="footer__brand"><span data-bind="business.name"></span> · <span data-bind="business.title"></span></p>
+        <p class="footer__phone"><a data-tel href="#"><span data-bind="business.phoneDisplay"></span></a></p>
+      </div>
+      <ul class="footer__social social" aria-label="רשתות חברתיות וקישורים"></ul>
+      <ul class="footer__links">
+        <li><a href="accessibility.html">הצהרת נגישות</a></li>
+        <li><a href="#top">חזרה למעלה</a></li>
+      </ul>
+      <p class="footer__copy">© <span class="js-year"></span> <span data-bind="business.name"></span>. כל הזכויות שמורות.</p>
+    </div>
+  </footer>
+
+  <a class="wa-float" data-wa href="#contact" aria-label="שליחת הודעת וואטסאפ לגל (נפתח בחלון חדש)">
+    <span data-icon="whatsapp" aria-hidden="true"></span>
+  </a>
+
+  <!-- תפריט נגישות -->
+  <div class="a11y">
+    <button class="a11y__toggle" type="button" aria-expanded="false" aria-controls="a11y-panel">
+      <span data-icon="accessibility" aria-hidden="true"></span>
+      <span class="visually-hidden">תפריט נגישות</span>
+    </button>
+    <div class="a11y__panel" id="a11y-panel" role="region" aria-label="הגדרות נגישות" hidden>
+      <p class="a11y__heading">הגדרות נגישות</p>
+      <div class="a11y__group" role="group" aria-label="גודל טקסט">
+        <span class="a11y__label">גודל טקסט</span>
+        <div class="a11y__row">
+          <button type="button" data-a11y="font-down">א־</button>
+          <span class="a11y__value" aria-live="polite"></span>
+          <button type="button" data-a11y="font-up">א+</button>
+        </div>
+      </div>
+      <button type="button" class="a11y__opt" data-a11y="contrast" aria-pressed="false">ניגודיות גבוהה</button>
+      <button type="button" class="a11y__opt" data-a11y="links" aria-pressed="false">הדגשת קישורים</button>
+      <button type="button" class="a11y__opt" data-a11y="font" aria-pressed="false">גופן קריא</button>
+      <button type="button" class="a11y__opt" data-a11y="motion" aria-pressed="false">עצירת אנימציות</button>
+      <button type="button" class="a11y__reset" data-a11y="reset">איפוס הגדרות</button>
+      <a class="a11y__statement" href="accessibility.html">להצהרת הנגישות</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js" defer></script>
+  <script src="js/content.js" defer></script>
+  <script src="js/icons.js" defer></script>
+  <script src="js/a11y.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

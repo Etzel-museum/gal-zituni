@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>מחולל ברקוד | גל זיתוני</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --green: #1f4d3a; --sun: #f0a02c; --line: #ddd5c8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Assistant", Arial, sans-serif; background: #f7f2ea; color: #1c2420; font-size: 1.05rem; }
+    main { max-width: 1000px; margin: 0 auto; padding: 32px 16px 60px; }
+    h1 { font-family: "Rubik", sans-serif; color: var(--green); margin: 0 0 4px; }
+    .lead { color: #4a5650; margin: 0 0 28px; }
+    .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    .panel { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: grid; gap: 16px; }
+    label { font-weight: 700; display: block; margin-bottom: 4px; }
+    .hint { font-size: .9rem; color: #4a5650; margin: 4px 0 0; }
+    input[type=url], input[type=text], select { width: 100%; font: inherit; padding: .55em .8em; border: 1px solid #9aa39e; border-radius: 10px; }
+    input[type=url] { direction: ltr; text-align: left; }
+    input[type=range] { width: 100%; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .row > * { flex: 1; min-width: 120px; }
+    button, .btn { font: inherit; font-weight: 700; padding: .7em 1.2em; border-radius: 999px; border: 2px solid var(--green); background: var(--green); color: #fff; cursor: pointer; text-align: center; }
+    button.secondary { background: #fff; color: var(--green); }
+    :focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
+    .preview { display: grid; gap: 20px; justify-items: center; }
+    canvas { width: 100%; max-width: 420px; height: auto; background: #fff; border-radius: 18px; box-shadow: 0 10px 30px rgba(20, 40, 30, .1); }
+    .warn { background: #fff8db; border: 2px dashed #d4a600; color: #5c4400; border-radius: 12px; padding: 10px 14px; font-size: .95rem; }
+    .ok { color: #0f7a3d; font-weight: 700; }
+    .test { font-size: .95rem; text-align: center; }
+    @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>מחולל ברקוד עם הלוגו</h1>
+  <p class="lead">ברקוד שמוביל לאתר, עם הלוגו של גל במרכז – להדפסה על כרטיסי ביקור, מדבקות ופליירים.</p>
+
+  <div class="layout">
+    <form class="panel" id="form" onsubmit="return false">
+      <div>
+        <label for="url">כתובת שהברקוד יפתח</label>
+        <input type="url" id="url" required>
+        <p class="hint">נלקח אוטומטית מ-<code>business.siteUrl</code> בקובץ התוכן. אפשר גם להקליד ידנית.</p>
+      </div>
+      <p class="warn" id="url-warn" hidden>עדיין אין כתובת סופית לאתר – הברקוד כרגע לדוגמה בלבד. לא להדפיס לפני שהכתובת נקבעה!</p>
+
+      <div>
+        <label for="logo-file">לוגו</label>
+        <input type="file" id="logo-file" accept="image/*">
+        <p class="hint">כרגע: לוגו שנחתך מצילום כרטיס הביקור. אם יש קובץ מקורי של הלוגו (PNG/SVG) – לבחור אותו כאן לתוצאה חדה יותר. הקובץ לא נשלח לשום מקום.</p>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="color">צבע הברקוד</label>
+          <select id="color">
+            <option value="#111111">שחור</option>
+            <option value="#1f4d3a">ירוק כהה</option>
+            <option value="#3b2a1a">חום כהה</option>
+          </select>
+        </div>
+        <div>
+          <label for="ring">מסגרת סביב הלוגו</label>
+          <select id="ring">
+            <option value="#f0a02c">כתום (צבע השמש)</option>
+            <option value="#ffffff">לבן</option>
+            <option value="#111111">שחור</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label for="logo-size">גודל הלוגו: <span id="logo-size-val"></span></label>
+        <input type="range" id="logo-size" min="18" max="36" value="30">
+        <p class="hint">לוגו גדול מדי עלול לפגוע בסריקה. אחרי כל שינוי – לבדוק סריקה עם טלפון.</p>
+      </div>
+
+      <div>
+        <label for="caption">טקסט מתחת לברקוד (לא חובה)</label>
+        <input type="text" id="caption" value="סרקו ובואו להכיר">
+      </div>
+
+      <div class="row">
+        <button type="button" id="dl-png">הורדת PNG להדפסה</button>
+        <button type="button" class="secondary" id="dl-svg">הורדת SVG (וקטורי)</button>
+      </div>
+    </form>
+
+    <div class="preview">
+      <canvas id="canvas" width="1200" height="1300" role="img" aria-label="תצוגה מקדימה של הברקוד"></canvas>
+      <p class="test">כדי לבדוק: לסרוק את המסך עם מצלמת הטלפון ולוודא שהאתר נפתח.<br><span id="status" aria-live="polite"></span></p>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="../js/content.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var PLACEHOLDER_URL = 'https://example.com/gal-zituni';
+  var siteUrl = (window.SITE && SITE.business.siteUrl) || '';
+  $('url').value = siteUrl || PLACEHOLDER_URL;
+
+  var logo = new Image();
+  logo.onload = draw;
+  logo.src = '../images/logo-mark.jpg';
+
+  $('logo-file').addEventListener('change', function (e) {
+    var f = e.target.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function () { logo.src = r.result; };
+    r.readAsDataURL(f);
+  });
+  ['url', 'color', 'ring', 'logo-size', 'caption'].forEach(function (id) { $(id).addEventListener('input', draw); });
+
+  function build() {
+    var qr = qrcode(0, 'H'); // H = עמיד ל-30% כיסוי, מאפשר לוגו במרכז
+    qr.addData($('url').value.trim() || PLACEHOLDER_URL);
+    qr.make();
+    return qr;
+  }
+
+  // מחשב את המיקום והגודל של הלוגו (ביחידות של ריבועי הברקוד)
+  function layout(n) {
+    var pct = +$('logo-size').value / 100;
+    var cells = Math.floor(n * pct);
+    if ((n - cells) % 2) cells++;                  // שיהיה ממורכז בדיוק
+    return { start: (n - cells) / 2, cells: cells };
+  }
+
+  function draw() {
+    var qr = build(), n = qr.getModuleCount();
+    var canvas = $('canvas'), ctx = canvas.getContext('2d');
+    var W = canvas.width, margin = 4, cell = Math.floor(W / (n + margin * 2));
+    var off = Math.floor((W - cell * n) / 2);
+    var caption = $('caption').value.trim();
+    canvas.height = caption ? W + 110 : W;
+    var color = $('color').value, L = layout(n);
+    $('logo-size-val').textContent = $('logo-size').value + '%';
+    var u = $('url').value.trim();
+    $('url-warn').hidden = !(u === PLACEHOLDER_URL || /example\.com/.test(u));
+
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, canvas.height);
+    ctx.fillStyle = color;
+    for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+      if (inLogo(r, c, L, n)) continue;
+      if (qr.isDark(r, c)) ctx.fillRect(off + c * cell, off + r * cell, cell, cell);
+    }
+    // לוגו עגול במרכז
+    var cx = off + (n / 2) * cell, cy = cx, rad = (L.cells * cell) / 2;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = $('ring').value;
+    ctx.beginPath(); ctx.arc(cx, cy, rad - cell * 0.4, 0, Math.PI * 2); ctx.fill();
+    if (logo.complete && logo.naturalWidth) {
+      var inner = rad - cell * 1.1;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, cy, inner, 0, Math.PI * 2); ctx.clip();
+      ctx.fillStyle = '#fff'; ctx.fill();
+      var s = Math.min(logo.naturalWidth, logo.naturalHeight);
+      ctx.drawImage(logo, (logo.naturalWidth - s) / 2, (logo.naturalHeight - s) / 2, s, s, cx - inner, cy - inner, inner * 2, inner * 2);
+      ctx.restore();
+    }
+    if (caption) {
+      ctx.fillStyle = color;
+      ctx.font = '800 64px Rubik, Assistant, sans-serif';
+      ctx.textAlign = 'center'; ctx.direction = 'rtl';
+      ctx.fillText(caption, W / 2, W + 40);
+    }
+    $('status').textContent = 'ברקוד מוכן (' + n + '×' + n + ').';
+  }
+
+  // הריבועים שמכוסים ע"י העיגול של הלוגו – לא מציירים אותם
+  function inLogo(r, c, L, n) {
+    var cx = n / 2, rad = L.cells / 2 + 0.3;
+    var dx = c + 0.5 - cx, dy = r + 0.5 - cx;
+    return dx * dx + dy * dy <= rad * rad;
+  }
+
+  function download(href, name) {
+    var a = document.createElement('a'); a.href = href; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  $('dl-png').addEventListener('click', function () {
+    download($('canvas').toDataURL('image/png'), 'gal-zituni-qr.png');
+  });
+
+  $('dl-svg').addEventListener('click', function () {
+    var qr = build(), n = qr.getModuleCount(), L = layout(n), m = 4, size = n + m * 2;
+    var color = $('color').value, cx = m + n / 2, rad = L.cells / 2, path = '';
+    for (var r = 0; r < n; r++) for (var c = 0; c < n; c++)
+      if (qr.isDark(r, c) && !inLogo(r, c, L, n)) path += 'M' + (c + m) + ' ' + (r + m) + 'h1v1h-1z';
+    var logoHref = '';
+    try {
+      var t = document.createElement('canvas'), s = Math.min(logo.naturalWidth, logo.naturalHeight);
+      t.width = t.height = 600;
+      t.getContext('2d').drawImage(logo, (logo.naturalWidth - s) / 2, (logo.naturalHeight - s) / 2, s, s, 0, 0, 600, 600);
+      logoHref = t.toDataURL('image/jpeg', .92);
+    } catch (e) {}
+    var inner = rad - 1.1;
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + size + ' ' + size + '" shape-rendering="crispEdges">' +
+      '<rect width="100%" height="100%" fill="#fff"/><path fill="' + color + '" d="' + path + '"/>' +
+      '<circle cx="' + cx + '" cy="' + cx + '" r="' + rad + '" fill="#fff"/>' +
+      '<circle cx="' + cx + '" cy="' + cx + '" r="' + (rad - .4) + '" fill="' + $('ring').value + '"/>' +
+      '<clipPath id="c"><circle cx="' + cx + '" cy="' + cx + '" r="' + inner + '"/></clipPath>' +
+      '<circle cx="' + cx + '" cy="' + cx + '" r="' + inner + '" fill="#fff"/>' +
+      (logoHref ? '<image clip-path="url(#c)" href="' + logoHref + '" x="' + (cx - inner) + '" y="' + (cx - inner) + '" width="' + inner * 2 + '" height="' + inner * 2 + '"/>' : '') +
+      '</svg>';
+    download(URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' })), 'gal-zituni-qr.svg');
+  });
+
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+})();
+</script>
+</body>
+</html>
